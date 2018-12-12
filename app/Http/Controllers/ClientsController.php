@@ -14,7 +14,11 @@ class ClientsController extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::all();
+
+        return view('clients.index', [
+            'clients' => $clients
+        ]);
     }
 
     /**
@@ -52,7 +56,7 @@ class ClientsController extends Controller
             'name' => $request['project']
         ]);
 
-        return redirect($client->path())
+        return redirect('clients')
             ->with('flash', 'Client successfully created!');
     }
 

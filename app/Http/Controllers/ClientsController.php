@@ -35,7 +35,25 @@ class ClientsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        request()->validate([
+            'name' => 'required|max:255',
+            'company' => 'max:255|unique:clients',
+            'project' => 'max:255',
+            'description' => 'max:255'
+        ]);
+
+        $client = Client::create([
+            'name' => $request['name'],
+            'company' => $request['company'],
+            'description' => $request['description']
+        ]);
+
+        $client->projects()->create([
+            'name' => $request['project']
+        ]);
+
+        return redirect($client->path())
+            ->with('flash', 'Client successfully created!');
     }
 
     /**

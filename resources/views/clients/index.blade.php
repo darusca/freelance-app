@@ -36,8 +36,8 @@
                         <h2>Manage <b>Clients</b></h2>
                     </div>
                     <div class="col-sm-6">
-                        <a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Client</span></a>
-                        <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
+                        <a href="#addClientModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Client</span></a>
+                        <a href="#deleteClientModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
                     </div>
                 </div>
             </div>
@@ -70,8 +70,8 @@
                     <td>{{ $c->company }}</td>
                     <td>{{ $c->description }}</td>
                     <td>
-                        <a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                        <a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                        <a href="#editClientModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                        <a href="#deleteClientModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                     </td>
                 </tr>
                 </tbody>
@@ -93,7 +93,7 @@
             @endif
     </div>
     <!-- Edit Modal HTML -->
-    <div id="addEmployeeModal" class="modal fade">
+    <div id="addClientModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form method="POST" action={{ route('clients.store') }}>
@@ -128,30 +128,30 @@
         </div>
     </div>
     <!-- Edit Modal HTML -->
-    <div id="editEmployeeModal" class="modal fade">
+    <div id="editClientModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form>
+                <form method="POST" action="{{ route('clients.store') }}">
                     <div class="modal-header">
-                        <h4 class="modal-title">Edit Employee</h4>
+                        <h4 class="modal-title">Edit Client</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" class="form-control" required>
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" required>
+                            <label for="company">Company</label>
+                            <input type="text" id="company" name="company" class="form-control" required>
                         </div>
                         <div class="form-group">
-                            <label>Address</label>
-                            <textarea class="form-control" required></textarea>
+                            <label for="project">Project</label>
+                            <input type="text" id="project" name="project" class="form-control" />
                         </div>
                         <div class="form-group">
-                            <label>Phone</label>
-                            <input type="text" class="form-control" required>
+                            <label for="description">Description</label>
+                            <textarea type="text" id="description" name="description" class="form-control"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -163,12 +163,12 @@
         </div>
     </div>
     <!-- Delete Modal HTML -->
-    <div id="deleteEmployeeModal" class="modal fade">
+    <div id="deleteClientModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form>
                     <div class="modal-header">
-                        <h4 class="modal-title">Delete Employee</h4>
+                        <h4 class="modal-title">Delete Client</h4>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
                     <div class="modal-body">

@@ -11,6 +11,8 @@ class Client extends Model
         'description',
     ];
 
+    protected $with = ['projects'];
+
     public function projects()
     {
         return $this->hasMany(Project::class);

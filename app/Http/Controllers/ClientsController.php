@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class ClientsController extends Controller
@@ -16,9 +17,11 @@ class ClientsController extends Controller
     {
         $clients = Client::all();
 
-        return view('clients.index', [
-            'clients' => $clients
-        ]);
+        if (request()->wantsJson()) {
+            return $clients;
+        }
+
+        return view('clients.index')->withClients($clients);
     }
 
     /**
@@ -56,8 +59,7 @@ class ClientsController extends Controller
             'name' => $request['project']
         ]);
 
-        return redirect('clients')
-            ->with('flash', 'Client successfully created!');
+        return response()->json(['data' => $client]);
     }
 
     /**
@@ -70,10 +72,7 @@ class ClientsController extends Controller
     {
         $client = Client::findOrFail($id);
 
-        return view(
-            'clients.show',
-            compact('client')
-        );
+        return $client;
     }
 
     /**
@@ -84,7 +83,9 @@ class ClientsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $client = Client::findOrFail($id);
+
+        return $client;
     }
 
     /**
@@ -94,9 +95,16 @@ class ClientsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
-        //
+        $client = Client::findOrFail($id);
+        $client = $client->update($request->all());
+
+        $project = Project::where('client_id', '=', $id)->first();
+        $project->name = $request->project;
+        $project->save();
+
+        return response('Ok', 200);
     }
 
     /**
@@ -107,6 +115,9 @@ class ClientsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $client->delete();
+
+        return response()->json(['data' => $client]);
     }
 }

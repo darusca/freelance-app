@@ -16,6 +16,10 @@ class ProjectsController extends Controller
     {
         $projects = Project::all();
 
+        if (request()->wantsJson()) {
+            return $projects;
+        }
+
         return view('projects.index', [
             'projects' => $projects
         ]);
@@ -39,7 +43,19 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        /*request()->validate([
+            'client_id' => 'required',
+            'name' => 'required|max:255',
+            'description' => 'max:255'
+        ]);*/
+
+        $project = Project::create([
+            'client_id' => $request->clientId,
+            'name' => $request['name'],
+            'description' => $request['description']
+        ]);
+
+        return response()->json(['data' => $project]);
     }
 
     /**
@@ -50,7 +66,9 @@ class ProjectsController extends Controller
      */
     public function show($id)
     {
-        //
+        $proj = Project::findOrFail($id);
+
+        return $proj;
     }
 
     /**
@@ -61,7 +79,9 @@ class ProjectsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $proj = Project::findOrFail($id);
+
+        return $proj;
     }
 
     /**
@@ -73,7 +93,10 @@ class ProjectsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $proj = Project::findOrFail($id);
+        $proj->update($request->all());
+
+        return response('Ok', 200);
     }
 
     /**
@@ -84,6 +107,9 @@ class ProjectsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $proj = Project::findOrFail($id);
+        $proj->delete();
+
+        return response()->json(['data' => $proj]);
     }
 }

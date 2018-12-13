@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-    <show-list></show-list>
+    <client-list></client-list>
 @endsection

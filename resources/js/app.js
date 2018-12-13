@@ -19,7 +19,8 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 /*Client*/
-Vue.component('show-list', require('./components/clients/ShowList.vue'));
+Vue.component('client-list', require('./components/clients/ClientList.vue'));
+Vue.component('project-list', require('./components/projects/ProjectList.vue'));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))

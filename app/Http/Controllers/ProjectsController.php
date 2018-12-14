@@ -68,7 +68,11 @@ class ProjectsController extends Controller
     {
         $proj = Project::findOrFail($id);
 
-        return $proj;
+        if (request()->wantsJson()) {
+            return $proj;
+        }
+
+        return view('projects.edit', ['proj' => $proj]);
     }
 
     /**
@@ -81,7 +85,9 @@ class ProjectsController extends Controller
     {
         $proj = Project::findOrFail($id);
 
-        return $proj;
+        return view('projects.edit', ['proj' => $proj]);
+
+        //return $proj;
     }
 
     /**

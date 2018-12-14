@@ -16,6 +16,10 @@ class TasksController extends Controller
     {
         $tasks = Task::all();
 
+        if (request()->wantsJson()) {
+            return $tasks;
+        }
+
         return view('tasks.index', [
             'tasks' => $tasks
         ]);
@@ -39,7 +43,13 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $task = Task::create([
+            'project_id' => 40,
+            'name' => $request['name'],
+            'description' => $request['description']
+        ]);
+
+        return response()->json(['data' => $task]);
     }
 
     /**
@@ -50,7 +60,13 @@ class TasksController extends Controller
      */
     public function show($id)
     {
-        //
+        $task = Task::findOrFail($id);
+
+        if (request()->wantsJson()) {
+            return $task;
+        }
+
+        return view('tasks.edit', ['task' => $task]);
     }
 
     /**
@@ -61,7 +77,9 @@ class TasksController extends Controller
      */
     public function edit($id)
     {
-        //
+        $task = Task::findOrFail($id);
+
+        return view('tasks.edit', ['task' => $task]);
     }
 
     /**
@@ -73,7 +91,10 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $task = Task::findOrFail($id);
+        $task->update($request->all());
+
+        return response('Ok', 200);
     }
 
     /**
@@ -84,6 +105,9 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $task = Task::findOrFail($id);
+        $task->delete();
+
+        return response()->json(['data' => $task]);
     }
 }

@@ -24,7 +24,7 @@
                     </thead>
                     <tbody  v-for="p in projects">
                     <tr>
-                        <td>{{ p.client_id }}</td><!--p.project[0].name - p.project[0].company-->
+                        <td>{{ p.client.name }}</td>
                         <td style="width: 38%">{{ p.name }}</td>
                         <td>{{ p.tasks.length }}</td>
                         <td>
@@ -46,7 +46,7 @@
             <!--<p>No Projects</p>-->
             <!-- @endif-->
         </div>
-        <!-- Edit Modal HTML -->
+        <!-- Add Modal HTML -->
         <div id="addProjModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -58,9 +58,8 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>Project client</label>
-                                <select class="form-control">
-                                    <option>select...</option>
-                                    <option v-for="c in clients" v-model="newProj.client_id">{{ c.name }}</option>
+                                <select class="form-control" v-model="newProj.client_id">
+                                    <option v-for="c in clients" :value="c.id">{{ c.name }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -90,6 +89,12 @@
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
+                            <div class="form-group">
+                                <label>Project client</label>
+                                <select class="form-control" v-model="newProj.client_id">
+                                    <option v-for="c in clients" :value="c.id">{{ c.name }}</option>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label>Name</label>
                                 <input type="text" class="form-control" v-model="newProj.name" required />
@@ -135,7 +140,7 @@
     import axios from 'axios'
 
     export default {
-        name: "show-list",
+        name: "project-list",
 
         data() {
             return {
@@ -143,7 +148,7 @@
                 projects: [],
                 projId: null,
                 newProj: {
-                    'clientId': 39,
+                    'client_id': null,
                     'name': '',
                     'description': ''
                 },
@@ -151,7 +156,7 @@
         },
         created() {
             $.getJSON('projects', function (projects) {
-                this.projects = projects
+                this.projects = projects;
             }.bind(this));
             $.getJSON('clients', function (clients) {
                 this.clients = clients;
@@ -169,9 +174,8 @@
                 if (this.projId !== null) {
                     axios.get('projects/' + this.projId)
                         .then(function (resp) {
-                            newProj.clientId = resp.data.client_id;
                             newProj.name = resp.data.name;
-                            newProj.description = resp.data.description
+                            newProj.description = resp.data.description;
                         }).catch(function (error) {
                         console.error(error);
                         alert('Could not get project');

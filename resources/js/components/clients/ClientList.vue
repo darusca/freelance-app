@@ -25,7 +25,7 @@
                     </th>
                     <th>Name</th>
                     <th>Company</th>
-                    <th>Project</th>
+                    <th># Projects</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -39,8 +39,10 @@
                     </td>
                     <td>{{ c.name }}</td>
                     <td>{{ c.company }}</td>
-                    <td><a :href="'/projects/' + c.projects[0].id">{{ c.projects[0].name }}</a></td>
-                    <td>
+                    <td>{{ c.projects.length }}</td>
+                    <!--<td><a :href="'/projects/' + c.projects[0].id">{{ c.projects[0].name }}</a></td>-->
+                    <td style="width: 25%">
+                        <a href="#addProjModal" data-toggle="modal"><i title="Add project" data-toggle="tooltip" class="material-icons">&#xE147;</i></a>
                         <a href="#editClientModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" @click="set(c.id)">&#xE254;</i></a>
                         <a href="#deleteClientModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete" @click="set(c.id)">&#xE872;</i></a>
                     </td>
@@ -157,7 +159,7 @@
     import axios from 'axios'
 
     export default {
-        name: "show-list",
+        name: "client-list",
 
         data() {
             return {

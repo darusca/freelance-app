@@ -18,15 +18,15 @@
                     <tr>
                         <th>Project</th>
                         <th>Task</th>
-                        <th># Tasks</th>
+                        <th>Description</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody  v-for="t in tasks">
                     <tr>
-                        <td>{{ t.project_id }}</td><!--p.project[0].name - p.project[0].company-->
+                        <td>{{ t.project.name }}</td>
                         <td style="width: 38%">{{ t.name }}</td>
-                        <td>0</td>
+                        <td>{{ t.description }}</td>
                         <td>
                             <a href="#editTaskModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" @click="set(t.id)">&#xE254;</i></a>
                             <a href="#delTaskModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete" @click="set(t.id)">&#xE872;</i></a>
@@ -46,7 +46,7 @@
             <!--<p>No Projects</p>-->
             <!-- @endif-->
         </div>
-        <!-- Edit Modal HTML -->
+        <!-- Add Modal HTML -->
         <div id="addTaskModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -57,10 +57,9 @@
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
-                                <label>Task project</label>
-                                <select class="form-control">
-                                    <option>select...</option>
-                                    <option v-for="p in projects" v-model="newTask.project_id">{{ p.name }}</option>
+                                <label>Task Project</label>
+                                <select class="form-control" v-model="newTask.project_id">
+                                    <option v-for="p in projects" :value="p.id">{{ p.name }}</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -150,7 +149,7 @@
                 tasks: [],
                 taskId: null,
                 newTask: {
-                    'projectId': 39,
+                    'project_id': null,
                     'name': '',
                     'description': ''
                 },
@@ -176,8 +175,6 @@
                 if (this.taskId !== null) {
                     axios.get('tasks/' + this.taskId)
                         .then(function (resp) {
-                            console.log(resp);
-                            newTask.projectId = resp.data.project_id;
                             newTask.name = resp.data.name;
                             newTask.description = resp.data.description;
                         }).catch(function (error) {

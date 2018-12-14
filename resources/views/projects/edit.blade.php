@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <project-edit></project-edit>
+    @foreach($proj as $p)
+    {{ $p->name }}
+    @endforeach
 @endsection

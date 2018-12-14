@@ -14,7 +14,7 @@ class TasksController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
+        $tasks = Task::with('project')->get();
 
         if (request()->wantsJson()) {
             return $tasks;
@@ -44,7 +44,7 @@ class TasksController extends Controller
     public function store(Request $request)
     {
         $task = Task::create([
-            'project_id' => 40,
+            'project_id' => $request['project_id'],
             'name' => $request['name'],
             'description' => $request['description']
         ]);

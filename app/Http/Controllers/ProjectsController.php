@@ -14,7 +14,7 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        $projects = Project::all();
+        $projects = Project::with('client')->get();
 
         if (request()->wantsJson()) {
             return $projects;
@@ -50,7 +50,7 @@ class ProjectsController extends Controller
         ]);*/
 
         $project = Project::create([
-            'client_id' => $request->clientId,
+            'client_id' => $request->client_id,
             'name' => $request['name'],
             'description' => $request['description']
         ]);

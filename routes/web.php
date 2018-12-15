@@ -23,4 +23,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('clients', 'ClientsController');
     Route::resource('projects', 'ProjectsController');
     Route::resource('tasks', 'TasksController');
+
+    Route::get('/projects/{project}/tasks', 'ProjectTasksController@index')->name('project.tasks');
 });

@@ -21,6 +21,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 /*Client*/
 Vue.component('client-list', require('./components/clients/ClientList.vue'));
 Vue.component('project-list', require('./components/projects/ProjectList.vue'));
+Vue.component('project-tasks', require('./components/projects/ProjectTasks.vue'));
 Vue.component('task-list', require('./components/tasks/TaskList.vue'));
 
 // const files = require.context('./', true, /\.vue$/i)

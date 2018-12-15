@@ -6,30 +6,36 @@
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h2>Manage <b>Projects</b></h2>
+                            <h2>Manage <b>Project Tasks</b></h2>
                         </div>
                         <div class="col-sm-6">
-                            <a href="#addProjModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add Project</span></a>
+                            <a href="#addProjModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add Task</span></a>
                         </div>
                     </div>
                 </div>
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
-                        <th>Client</th>
                         <th>Project</th>
-                        <th># Tasks</th>
+                        <th>Task</th>
+                        <th>Description</th>
+                        <th>Stopwatch</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody  v-for="p in projects">
+                    <tbody  v-for="p in projects" v-on:click="startTimer()">
                     <tr>
-                        <td>{{ p.client.name }}</td>
-                        <td style="width: 38%">{{ p.name }}</td>
-                        <td>{{ p.tasks.length }}</td>
+                        <td>{{ p.name }}</td>
+                        <td style="width: 38%">{{ p.tasks[0].name }}</td>
+                        <td>{{ p.tasks[0].description }}</td>
+                        <td><span v-bind:id=setMinId(p.tasks[0].id)>00</span>:<span v-bind:id=setSecId(p.tasks[0].id)>00</span></td>
                         <td style="width: 16%">
-                            <!-- @TODO Fix -->
-                            <a href="projects/47/tasks"><i title="Tasks" data-toggle="tooltip" class="material-icons">&#xE8EE;</i></a>
+                            <!--<component project-tasks="{{ route('project.tasks') }}"><i title="Tasks" data-toggle="tooltip" class="material-icons">&#xE8EE;</i></component>-->
+                            <a href="#">
+                                <i title="Start timer" data-toggle="tooltip" class="material-icons" @click="startTimer(p.tasks[0].id)">
+                                    <span v-if="!timerOn">&#xE425;</span><span v-if="timerOn">&#xE426;</span>
+                                </i>
+                            </a>
                             <a href="#editProjModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" @click="set(p.id)">&#xE254;</i></a>
                             <a href="#delProjModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete" @click="set(p.id)">&#xE872;</i></a>
                         </td>
@@ -142,10 +148,11 @@
     import axios from 'axios'
 
     export default {
-        name: "project-list",
+        name: "project-tasks",
 
         data() {
             return {
+                timerOn: false,
                 clients: [],
                 projects: [],
                 projId: null,
@@ -157,14 +164,43 @@
             };
         },
         created() {
-            $.getJSON('projects', function (projects) {
+            $.getJSON('/projects', function (projects) {
                 this.projects = projects;
+                console.log(projects);
             }.bind(this));
-            $.getJSON('clients', function (clients) {
+            /*$.getJSON('clients', function (clients) {
                 this.clients = clients;
-            }.bind(this));
+            }.bind(this));*/
         },
         methods: {
+            setMinId(task) {
+                return 'minutes'+task;
+            },
+
+            setSecId(task) {
+                return 'seconds'+task;
+            },
+
+            //@TODO Extract to a component
+            startTimer(task) {
+                let sec = 0;
+
+                this.timerOn = true;
+
+                let myInterval = setInterval( function() {
+                    $('#'+this.setSecId(task)).html(this.pad(++sec%60));
+                    $('#'+this.setMinId(task)).html(this.pad(parseInt(sec/60,10)));
+                }.bind(this), 1000);
+
+                function myStopFunction() {
+                    clearInterval(myInterval);
+                }
+            },
+
+            pad(val) {
+                return val > 9 ? val : "0" + val;
+            },
+
             set(projId) {
                 this.projId = projId;
                 this.getProject();

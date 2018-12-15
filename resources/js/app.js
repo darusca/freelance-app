@@ -20,6 +20,7 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 /*Client*/
 Vue.component('client-list', require('./components/clients/ClientList.vue'));
+Vue.component('client-projects', require('./components/clients/ClientProjects.vue'));
 Vue.component('project-list', require('./components/projects/ProjectList.vue'));
 Vue.component('project-tasks', require('./components/projects/ProjectTasks.vue'));
 Vue.component('task-list', require('./components/tasks/TaskList.vue'));

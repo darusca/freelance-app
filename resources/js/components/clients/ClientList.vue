@@ -40,7 +40,8 @@
                     <td>{{ c.name }}</td>
                     <td>{{ c.company }}</td>
                     <td>{{ c.projects.length }}</td>
-                    <td>
+                    <td  style="width: 16%">
+                        <a :href="'clients/'+c.id+'/projects'"><i title="Projects" data-toggle="tooltip" class="material-icons">&#xE8EE;</i></a>
                         <a href="#editClientModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" @click="set(c.id)">&#xE254;</i></a>
                         <a href="#deleteClientModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete" @click="set(c.id)">&#xE872;</i></a>
                     </td>

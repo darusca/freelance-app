@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class ProjectTasksController extends Controller
@@ -14,14 +15,14 @@ class ProjectTasksController extends Controller
      */
     public function index($id)
     {
-        $projects = Project::find($id);
+        $projTasks = Task::where('project_id', $id)->with('project')->get();
 
         if (request()->wantsJson()) {
-            return $projects;
+            return $projTasks;
         }
 
         return view('projects.project-tasks', [
-            'projects' => $projects
+            'projTasks' => $projTasks
         ]);
     }
 

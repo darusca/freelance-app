@@ -6,7 +6,7 @@
                 <div class="table-title">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h2>{{ project.name }} <b> Tasks</b></h2>
+                            <h2>{{ client.name }} <b> Projects</b></h2>
                         </div>
                         <div class="col-sm-6">
                             <a href="#addProjModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add Task</span></a>
@@ -22,20 +22,14 @@
                         <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody  v-for="pt in projectTasks" v-on:click="startTimer()">
+                    <tbody  v-for="cp in clientProjects">
                     <tr>
-                        <td style="width: 38%">{{ pt.name }}</td>
-                        <td>{{ pt.description }}</td>
-                        <td><span v-bind:id=setMinId(pt.id)>00</span>:<span v-bind:id=setSecId(pt.id)>00</span></td>
+                        <td style="width: 38%">{{ cp.name }}</td>
+                        <td>{{ cp.description }}</td>
+                        <td><span v-bind:id=setMinId(cp.id)>00</span>:<span v-bind:id=setSecId(cp.id)>00</span></td>
                         <td style="width: 16%">
-                            <!--<component project-tasks="{{ route('project.tasks') }}"><i title="Tasks" data-toggle="tooltip" class="material-icons">&#xE8EE;</i></component>-->
-                            <a href="#">
-                                <i title="Start timer" data-toggle="tooltip" class="material-icons" @click="startTimer(pt.id)">
-                                    <span v-if="!timerOn">&#xE425;</span><span v-if="timerOn">&#xE426;</span>
-                                </i>
-                            </a>
-                            <a href="#editProjModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" @click="set(pt.id)">&#xE254;</i></a>
-                            <a href="#delProjModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete" @click="set(pt.id)">&#xE872;</i></a>
+                            <a href="#editProjModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" @click="set(cp.id)">&#xE254;</i></a>
+                            <a href="#delProjModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete" @click="set(cp.id)">&#xE872;</i></a>
                         </td>
                     </tr>
                     <!--@endforeach-->
@@ -146,15 +140,15 @@
     import axios from 'axios'
 
     export default {
-        name: "project-tasks",
+        name: "client-projects",
 
         data() {
             return {
-                timerOn: false,
+                client:[],
                 clients: [],
                 project: {},
                 projects: [],
-                projectTasks: [],
+                clientProjects: [],
                 projId: null,
                 newProj: {
                     'client_id': null,
@@ -164,7 +158,7 @@
             };
         },
         created() {
-            let projTasksUrl = window.location.pathname;
+            let clientProjUrl = window.location.pathname;
 
             $.getJSON('/clients', function (clients) {
                 this.clients = clients;
@@ -174,9 +168,9 @@
                 this.projects = projects;
             }.bind(this));
 
-            $.getJSON(projTasksUrl, function (pt) {
-                this.projectTasks = pt[0].project.tasks;
-                this.project = pt[0].project;
+            $.getJSON(clientProjUrl, function (cp) {
+                this.clientProjects = cp;
+                this.client = cp[0].client;
                 console.log(this.project);
             }.bind(this));
         },
@@ -187,22 +181,6 @@
 
             setSecId(task) {
                 return 'seconds'+task;
-            },
-
-            //@TODO Extract to a component
-            startTimer(task) {
-                let sec = 0;
-
-                this.timerOn = true;
-
-                let myInterval = setInterval( function() {
-                    $('#'+this.setSecId(task)).html(this.pad(++sec%60));
-                    $('#'+this.setMinId(task)).html(this.pad(parseInt(sec/60,10)));
-                }.bind(this), 1000);
-
-                function myStopFunction() {
-                    clearInterval(myInterval);
-                }
             },
 
             pad(val) {

@@ -22,18 +22,17 @@
                         <th>Actions</th>
                     </tr>
                     </thead>
-                    <tbody  v-for="p in projects">
-                    <tr>
-                        <td>{{ p.client.name }}</td>
-                        <td style="width: 38%">{{ p.name }}</td>
-                        <td>{{ p.tasks.length }}</td>
-                        <td style="width: 16%">
-                            <!-- @TODO Fix -->
-                            <a href="projects/47/tasks"><i title="Tasks" data-toggle="tooltip" class="material-icons">&#xE8EE;</i></a>
-                            <a href="#editProjModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" @click="set(p.id)">&#xE254;</i></a>
-                            <a href="#delProjModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete" @click="set(p.id)">&#xE872;</i></a>
-                        </td>
-                    </tr>
+                    <tbody v-for="p in projects">
+                        <tr>
+                            <td>{{ p.client.name }}</td>
+                            <td style="width: 38%">{{ p.name }}</td>
+                            <td>{{ p.tasks.length }}</td>
+                            <td style="width: 16%">
+                                <a :href="'projects/'+p.id+'/tasks'"><i title="Tasks" data-toggle="tooltip" class="material-icons">&#xe896;</i></a>
+                                <a href="#editProjModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit" @click="set(p.id)">&#xE254;</i></a>
+                                <a href="#delProjModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete" @click="set(p.id)">&#xE872;</i></a>
+                            </td>
+                        </tr>
                     <!--@endforeach-->
                     </tbody>
                 </table>
@@ -159,6 +158,7 @@
         created() {
             $.getJSON('projects', function (projects) {
                 this.projects = projects;
+                console.log(this.projects);
             }.bind(this));
             $.getJSON('clients', function (clients) {
                 this.clients = clients;

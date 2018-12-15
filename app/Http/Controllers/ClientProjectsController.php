@@ -2,25 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class ClientProjectsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($id)
     {
-        $projects = Project::with(['tasks', 'client'])->get();
+        $clientProjects = Project::where('client_id', $id)->with('client')->get();
 
         if (request()->wantsJson()) {
-            return $projects;
+            return $clientProjects;
         }
 
-        return view('projects.index', compact('projects'));
+        return view('clients.client-projects', [
+            'clientProjects' => $clientProjects
+        ]);
     }
 
     /**
@@ -30,7 +33,7 @@ class ProjectsController extends Controller
      */
     public function create()
     {
-        return view('projects.create');
+        return view('clients.create');
     }
 
     /**
@@ -41,19 +44,24 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        /*request()->validate([
-            'client_id' => 'required',
+        request()->validate([
             'name' => 'required|max:255',
+            'company' => 'max:255|unique:clients',
+            'project' => 'max:255',
             'description' => 'max:255'
-        ]);*/
+        ]);
 
-        $project = Project::create([
-            'client_id' => $request->client_id,
+        $client = Client::create([
             'name' => $request['name'],
+            'company' => $request['company'],
             'description' => $request['description']
         ]);
 
-        return response()->json(['data' => $project]);
+        $client->projects()->create([
+            'name' => $request['project']
+        ]);
+
+        return response()->json(['data' => $client]);
     }
 
     /**
@@ -64,13 +72,9 @@ class ProjectsController extends Controller
      */
     public function show($id)
     {
-        $proj = Project::findOrFail($id);
+        $client = Client::findOrFail($id);
 
-        if (request()->wantsJson()) {
-            return $proj;
-        }
-
-        return view('projects.edit', ['proj' => $proj]);
+        return $client;
     }
 
     /**
@@ -81,11 +85,9 @@ class ProjectsController extends Controller
      */
     public function edit($id)
     {
-        $proj = Project::findOrFail($id);
+        $client = Client::findOrFail($id);
 
-        return view('projects.edit', ['proj' => $proj]);
-
-        //return $proj;
+        return $client;
     }
 
     /**
@@ -95,10 +97,14 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id, Request $request)
     {
-        $proj = Project::findOrFail($id);
-        $proj->update($request->all());
+        $client = Client::findOrFail($id);
+        $client = $client->update($request->all());
+
+        $project = Project::where('client_id', '=', $id)->first();
+        $project->name = $request->project;
+        $project->save();
 
         return response('Ok', 200);
     }
@@ -111,9 +117,9 @@ class ProjectsController extends Controller
      */
     public function destroy($id)
     {
-        $proj = Project::findOrFail($id);
-        $proj->delete();
+        $client = Client::findOrFail($id);
+        $client->delete();
 
-        return response()->json(['data' => $proj]);
+        return response()->json(['data' => $client]);
     }
 }
